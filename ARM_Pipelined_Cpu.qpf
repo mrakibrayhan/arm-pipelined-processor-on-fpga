@@ -1,0 +1,3 @@
+QUARTUS_VERSION = "25.1"
+DATE = "01:45:00  October 22, 2026"
+PROJECT_REVISION = "ARM_Pipelined_Cpu"
