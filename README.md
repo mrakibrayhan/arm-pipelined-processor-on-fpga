@@ -44,6 +44,7 @@ Synchronous-read M9K memories: dual-port ROM (1 M9K), byte-enable RAM (1 M9K), r
 - `ARM_Pipelined_Cpu.qpf`
 - `ARM_Pipelined_Cpu.qsf`
 - `ARM_Pipelined_Cpu.spf`
+- `assembler_arm.py`
 
 - `LICENSE`, `.gitignore`, `README.md`
 
@@ -61,6 +62,13 @@ The `.qsf` already contains the device (`EP4CE6E22C8`), the pin assignments and 
 - Stop rule: `SWI`, or `B .` with condition true halts; illegal encoding or BX to an odd address = fault.
 - The program is loaded from `program.hex`, the initial RAM from `data.hex`, both when the FPGA is programmed. Reset does not reload the RAM; program the FPGA again to restore it.
 - **Snapshot / debug:** when the program halts, or when the ISSP source bit is set, the CPU is frozen and registers and RAM words are copied into small RAMs. Read them in Quartus with *Tools > In-System Memory Content Editor*; read counters and status with *Tools > In-System Sources and Probes Editor*. CPI = cycle counter / instruction counter.
+
+## Writing your own program
+`assembler_arm.py` (Python 3, no extra packages) turns an assembly file into the `program.hex` that the CPU loads when the FPGA is programmed:
+```
+python assembler_arm.py prog.s -o program.hex --depth 128
+```
+Copy the new `program.hex` (and `data.hex` if the assembler wrote one) into the Quartus project folder and compile again. Run `python assembler_arm.py --help` for all options. The core stops on `SWI`, or on `B .` (branch to itself).
 
 ## Limitations
 - Subset ISA, no interrupts, no caches, no MMU, no floating point.
